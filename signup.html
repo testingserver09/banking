@@ -1,0 +1,208 @@
+<!DOCTYpE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign Up</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/a2e0f1f889.js" crossorigin="anonymous"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .logo {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .logo img {
+      width: 50%;
+      height: 50%;
+    }
+
+    .signup-container {
+      flex: 1;
+      max-width: 400px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      padding-top: 20px;
+    }
+
+    h2 {
+      font-size: 24px;
+      margin-top: 10px;
+      text-align: center;
+      color: #111;
+    }
+
+    p.subtext {
+      text-align: center;
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 30px;
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 12px 45px 12px 40px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      font-size: 16px;
+    }
+
+    .input-group i {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      left: 12px;
+      font-size: 18px;
+      color: #888;
+    }
+
+    .signup-button {
+      background-color: #3836B4;
+      color: white;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s;
+      font-weight: 600;
+    }
+
+    .signup-button:hover {
+      background-color: #3a5be0;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      margin: 25px 0;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: #ddd;
+    }
+
+    .divider span {
+      margin: 0 10px;
+      color: #888;
+      font-size: 14px;
+    }
+
+    .social-btn {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 12px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 500;
+      border: 1px solid #ddd;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .social-btn:hover {
+      background: #f5f5f5;
+    }
+
+    .social-btn img {
+      width: 20px;
+      height: 20px;
+    }
+
+    .login {
+      text-align: center;
+      font-size: 14px;
+      margin-top: 10px;
+      color: #666;
+    }
+
+    .login a {
+      color: #3836B4;
+      font-weight: 500;
+      text-decoration: none;
+      margin-left: 4px;
+    }
+    .bottom-section {
+      margin-top: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding-bottom: 250px;
+    }
+  </style>
+</head>
+<body>
+  <div class="logo">
+    <img src="images/World_Wde_Funds.png" alt="App Logo">
+  </div>
+
+  <div class="signup-container">
+    <h2>Sign Up</h2>
+    <p class="subtext">Create a new account</p>
+
+    <div class="input-group">
+      <i class="fas fa-user"></i>
+      <input type="text" placeholder="Full Name" required>
+    </div>
+
+    <div class="input-group">
+      <i class="fas fa-envelope"></i>
+      <input type="email" placeholder="E-mail Address" required>
+    </div>
+
+    <div class="input-group">
+      <i class="fas fa-lock"></i>
+      <input type="password" placeholder="password" required>
+    </div>
+
+    <button class="signup-button">Sign Up</button>
+
+    <div class="divider"><span>or</span></div>
+  </div>
+  <div class="bottom-section">
+      <div class="social-btn">
+        <img src="images/Google.png" alt="Google">
+        Continue with Google
+      </div>
+
+      <div class="social-btn">
+        <img src="images/Apple.png" alt="Apple">
+        Continue with Apple
+      </div>
+
+      <div class="login">
+        Already have an account?<a href="login.html">Login</a>
+      </div>
+    </div>
+</body>
+</html>

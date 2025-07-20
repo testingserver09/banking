@@ -1,0 +1,308 @@
+<!DOCTYpE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>profile</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f5f6fa;
+      margin: 0;
+      padding: 0;
+    }
+    .profile-header {
+      text-align: center;
+      padding: 40px 20px 20px;
+    }
+    .profile-header img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    .profile-header h2 {
+      margin: 10px 0 5px;
+      font-size: 18px;
+    }
+    .verified-badge {
+      background-color: #1d59cf;
+      color: white;
+      font-size: 12px;
+      padding: 5px 12px;
+      border-radius: 12px;
+      display: inline-block;
+    }
+    .section {
+  margin: 20px auto;
+  border-radius: 16px;
+  background: #fff;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+  width: 92%;
+  max-width: 480px;
+}
+
+.section + .section {
+  margin-top: 24px;
+}
+
+.list-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 20px;
+  color: #333;
+  text-decoration: none;
+  font-size: 15px;
+  transition: background 0.25s ease, transform 0.15s ease;
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+  margin-bottom: 12px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.list-item:last-child {
+  border-bottom: none;
+}
+
+.list-item i {
+  color: #4b3ed9;
+  min-width: 20px;
+  font-size: 16px;
+}
+
+.list-item:hover {
+  background: #f4f3ff;
+  transform: scale(1.01);
+}
+.list-item {
+  position: relative;
+  overflow: hidden;
+}
+
+.list-item::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(75, 62, 217, 0.2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.4s ease, height 0.4s ease, opacity 0.6s ease;
+  pointer-events: none;
+}
+
+.list-item:active::after {
+  width: 200%;
+  height: 200%;
+  opacity: 0;
+  transition: 0s;
+}
+
+
+.section + .section {
+  margin-top: 24px;
+}
+.icon-img {
+  width: 25px;
+  height: 25px;
+  object-fit: contain;
+  margin-right: 12px;
+}
+    .footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-width: 420px;
+  margin: auto;
+  background: white;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 10px 0;
+  box-shadow: 0 -1px 10px rgba(0, 0, 0, 0.08);
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+  z-index: 20;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 12px;
+  color: #888;
+   justify-content: center;
+  text-decoration: none; /* removes underline */
+}
+
+.nav-item i {
+  font-size: 18px;
+  margin-bottom: 4px;
+}
+
+.nav-item.active {
+  color: #3d5afe;
+}
+
+.nav-item.active i {
+  color: #3d5afe;
+}
+.nav-item:hover {
+  color: #3d5afe; /* accent on hover */
+}
+
+.fab {
+  position: absolute;
+  top: -24px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background-color: #3836b4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 16px rgba(61, 90, 254, 0.4);
+  z-index: 30;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.fab:hover {
+  transform: translateX(-50%) scale(1.08);
+  box-shadow: 0 6px 20px rgba(61, 90, 254, 0.6);
+}
+
+.fab-icon {
+  width: 28px;
+  height: 28px;
+}
+
+.fab-tooltip {
+  position: absolute;
+  top: -30px;
+  background-color: #3836b4;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.fab:hover .fab-tooltip {
+  opacity: 1;
+}
+
+  </style>
+</head>
+<body>
+  <div class="profile-header">
+    <img id="profileImage" src="" alt="profile picture" />
+    <h2 id="profileName"></h2>
+    <div id="verifiedBadge" class="verified-badge">Verified</div>
+  </div>
+
+  <div class="section">
+  <a href="account.html" class="list-item">
+    <img src="image/circle-user.png" 
+    class="icon-img" alt="Bell" />Account Info
+  <a href="notifications.html" class="list-item"><img src="image/bell-notification-social-media.png" class="icon-img" alt="Bell" />Notification Settings</a>
+  <a href="scan.html" class="list-item"><img src="image/qr.png" class="icon-img" alt="Bell" />Your QR Code</a>
+  <a href="security.html" class="list-item"><img src="image/shield-keyhole.png" class="icon-img" alt="Bell" />Security Settings</a>
+</div>
+
+<div class="section">
+  <a href="rewards.html" class="list-item"><img src="image/medal.png" class="icon-img" alt="Bell" />Rewards</a>
+  <a href="terms.html" class="list-item"><img src="image/terms-info.png" class="icon-img" alt="Bell" />Terms and Conditions</a>
+  <a href="" class="list-item"><img src="image/messages-question.png" class="icon-img" alt="Bell" />Help Center</a>
+  <a href="login.html" class="list-item"><img src="image/sign-out-alt.png" class="icon-img" alt="Bell" />Logout</a>
+</div>
+
+
+
+  <div class="footer">
+  <a href="dashboard.html" class="nav-item">
+  <i class="fas fa-home"></i>
+  <span>Home</span>
+</a>
+  <a href="cards.html"  class="nav-item">
+    <i class="fas fa-credit-card"></i>
+    <span>Cards</span>
+  </a>
+
+  <a href="scan.html" class="fab">
+  <img src="images/scan_WH.png" alt="Scan Code" class="fab-icon" />
+  <div class="fab-tooltip">Scan</div>
+</a>
+  <a href="analytics.html"  class="nav-item">
+    <i class="fas fa-chart-line"></i>
+    <span>Analytics</span>
+  </a>
+  <a href="profile.html"  class="nav-item">
+    <i class="fas fa-user"></i>
+    <span>profile</span>
+  </a>
+</div>
+
+  <script>
+    const userData = {
+      name: "BIGFISH",
+      image: "images/profile_stick.png",
+      verified: true
+    };
+
+    document.getElementById("profileName").textContent = userData.name;
+    document.getElementById("profileImage").src = userData.image;
+    document.getElementById("verifiedBadge").style.display = userData.verified ? "inline-block" : "none";
+  </script>
+  <script>
+  // Active tab switching
+  const navItems = document.querySelectorAll('.nav-item');
+  navItems.forEach(item => {
+    item.addEventListener('click', () => {
+      navItems.forEach(i => i.classList.remove('active'));
+      item.classList.add('active');
+    });
+  });
+
+  // FAB click tooltip
+  const fab = document.querySelector('.fab');
+  fab.addEventListener('click', () => {
+    const tooltip = document.createElement('div');
+    tooltip.textContent = 'Scan QR';
+    tooltip.className = 'fab-tooltip';
+    fab.appendChild(tooltip);
+
+    setTimeout(() => {
+      tooltip.remove();
+    }, 1500);
+  });
+
+  function switchpageContent(newContentSelector) {
+  const allSections = document.querySelectorAll('.page-content');
+  allSections.forEach(s => s.classList.add('hidden'));
+
+  setTimeout(() => {
+    allSections.forEach(s => s.style.display = 'none');
+    const newSection = document.querySelector(newContentSelector);
+    newSection.style.display = 'block';
+    setTimeout(() => newSection.classList.remove('hidden'), 10);
+  }, 300);
+}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Enter Payment Pin</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 100vh;
+    }
+
+    .top-bar {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      padding: 1rem;
+    }
+
+    .top-bar button {
+      background: #f5f3ff;
+      border: none;
+      border-radius: 12px;
+      padding: 0.6rem 0.9rem;
+      color: #3836B4;
+      font-size: 1.2rem;
+    }
+
+    .top-bar button a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .pin-heading {
+      flex: 1;
+      text-align: center;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #000;
+    }
+
+    .pin-container {
+      text-align: center;
+      margin-top: 40px;
+    }
+
+    .pin-boxes {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin: 2rem 0 0.5rem;
+    }
+
+    .pin-box {
+      width: 50px;
+      height: 50px;
+      border-radius: 12px;
+      background: #f4f3ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .forgot {
+      color: #3836B4;
+      font-size: 0.85rem;
+      margin-bottom: 1rem;
+    }
+
+    .numpad {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      width: 90%;
+      max-width: 400px;
+      margin-bottom: 40px;
+    }
+
+    .numpad button {
+      background: #e2e8f0;
+      border: none;
+      border-radius: 50%;
+      width: 80px;
+      height: 80px;
+      font-size: 1.5rem;
+      color: #111;
+      font-weight: 500;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.1s ease, background-color 0.2s ease;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.06);
+      cursor: pointer;
+    }
+
+    .numpad button:active {
+      transform: scale(0.95);
+      background-color: #e8e4ff;
+    }
+
+    .numpad button span {
+      font-size: 0.6rem;
+      color: #999;
+      margin-top: 2px;
+    }
+
+    #deleteBtn {
+      background-color: #ffecec;
+      color: #e53935;
+    }
+
+    .shake {
+      animation: shake 0.3s ease;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      50% { transform: translateX(5px); }
+      75% { transform: translateX(-5px); }
+    }
+
+    .success-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(5px);
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      z-index: 99;
+    }
+
+    .success-modal {
+      width: 100%;
+      max-width: 500px;
+      background: #fff;
+      border-radius: 20px 20px 0 0;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      animation: slideUp 0.4s ease;
+    }
+
+    .success-modal .amount {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .success-modal .status-text {
+      color: #22c55e;
+      font-size: 0.9rem;
+      margin: 5px 0;
+    }
+
+    .success-modal .desc {
+      font-size: 0.88rem;
+      color: #555;
+      margin-top: 0.5rem;
+    }
+
+    .avatar-row {
+      margin: 1.2rem 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .amount-avatar {
+      width: 60px;
+      height: 60px;
+      background: #7152f3;
+      color: white;
+      border-radius: 50%;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .recipient-avatar img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+
+    .btn-light, .btn-purple {
+      padding: 0.6rem 1.4rem;
+      border: none;
+      border-radius: 10px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .btn-light {
+      background: #f4f3ff;
+      color: #7152f3;
+    }
+
+    .btn-purple {
+      background: #7152f3;
+      color: #fff;
+    }
+    .done-link {
+  display: inline-block;
+  text-align: center;
+  text-decoration: none;
+  padding: 0.6rem 1.4rem;
+  border: none;
+  border-radius: 10px;
+  font-weight: 500;
+  background: #f4f3ff;
+  color: #7152f3;
+  font-size: 1rem;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.done-link:hover {
+  background: #e9e7fc;
+}
+
+.done-link:active {
+  transform: scale(0.98);
+}
+
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0%);
+        opacity: 1;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .pin-box {
+        width: 42px;
+        height: 42px;
+        font-size: 1.3rem;
+      }
+      .numpad button {
+        width: 64px;
+        height: 64px;
+        font-size: 1.3rem;
+      }
+      .success-modal {
+        padding: 1.5rem 1rem;
+      }
+      .amount-avatar, .recipient-avatar img {
+        width: 50px;
+        height: 50px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <audio id="successSound" src="https://assets.mixkit.co/sfx/preview/mixkit-bell-notification-933.mp3" preload="auto"></audio>
+  <div class="top-bar">
+    <button><a href="input.html"><i class="fa fa-chevron-left"></i></a></button>
+    <div class="pin-heading">Enter Payment Pin</div>
+  </div>
+
+  <div class="pin-container">
+    <div class="pin-boxes" id="pinBoxes">
+      <div class="pin-box"></div>
+      <div class="pin-box"></div>
+      <div class="pin-box"></div>
+      <div class="pin-box"></div>
+    </div>
+    <div class="forgot">Forgot Payment Pin?</div>
+  </div>
+
+  <div class="numpad" id="numpad">
+    <button data-val="1">1 <span>A B C</span></button>
+    <button data-val="2">2 <span>D E F</span></button>
+    <button data-val="3">3 <span>G H I</span></button>
+    <button data-val="4">4 <span>J K L</span></button>
+    <button data-val="5">5 <span>M N O</span></button>
+    <button data-val="6">6 <span>P Q R</span></button>
+    <button data-val="7">7 <span>S T U</span></button>
+    <button data-val="8">8 <span>V W X</span></button>
+    <button data-val="9">9 <span>Y Z</span></button>
+    <div></div>
+    <button data-val="0">0</button>
+    <button id="deleteBtn"><i class="fa-solid fa-delete-left"></i></button>
+  </div>
+
+  <div class="success-backdrop" id="successBackdrop">
+    <div class="success-modal" role="dialog" aria-modal="true">
+      <div class="amount">$<span id="modalAmount">0.00</span></div>
+      <div class="status-text">Transfer Successful</div>
+      <div class="avatar-row">
+        <div class="amount-avatar">$</div>
+        <div class="recipient-avatar"><img src="images/piggy-bank.png" alt="Recipient" /></div>
+      </div>
+      <p class="desc">Your <span id="modalAmountText">0.00</span> transfer to <span id="modalRecipient">someone</span> is on its way.</p>
+      <div class="actions">
+        <a href="dashboard.html" class="btn-purple" role="button">Done</a>
+        <button class="btn-purple" onclick="location.href='receipt.html'">See Receipt</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const pinBoxes = document.getElementById("pinBoxes");
+    const numpad = document.getElementById("numpad");
+    const successBackdrop = document.getElementById("successBackdrop");
+    const modalAmount = document.getElementById("modalAmount");
+    const modalAmountText = document.getElementById("modalAmountText");
+    const modalRecipient = document.getElementById("modalRecipient");
+    let enteredPin = "";
+
+    function updatePinDisplay() {
+      const boxes = pinBoxes.querySelectorAll(".pin-box");
+      boxes.forEach((box, i) => {
+        box.textContent = enteredPin[i] ? "•" : "";
+      });
+    }
+
+    function shakeBoxes() {
+      pinBoxes.classList.add("shake");
+      setTimeout(() => pinBoxes.classList.remove("shake"), 300);
+    }
+
+    function getQueryParams() {
+      const params = new URLSearchParams(window.location.search);
+      return {
+        amount: params.get("amount") || "0.00",
+        recipient: params.get("remark") || "someone"
+      };
+    }
+
+    function showSuccess(amount, recipient) {
+      modalAmount.textContent = amount;
+      modalAmountText.textContent = amount;
+      modalRecipient.textContent = recipient;
+      successBackdrop.style.display = "flex";
+
+      const sound = document.getElementById("successSound");
+      sound.currentTime = 0;
+      sound.play().catch(() => {});
+    }
+
+    function closeSuccess() {
+      successBackdrop.style.display = "none";
+    }
+
+    successBackdrop.addEventListener("click", (e) => {
+      if (e.target === successBackdrop) closeSuccess();
+    });
+
+    numpad.addEventListener("click", (e) => {
+      const button = e.target.closest("button");
+      if (!button) return;
+
+      const val = button.dataset.val;
+      const isDelete = button.id === "deleteBtn";
+
+      if (val && enteredPin.length < 4) {
+        enteredPin += val;
+        updatePinDisplay();
+      } else if (isDelete) {
+        enteredPin = enteredPin.slice(0, -1);
+        updatePinDisplay();
+      }
+
+      if (enteredPin.length === 4) {
+        if (enteredPin === "2222") {
+          const { amount, recipient } = getQueryParams();
+          enteredPin = "";
+          setTimeout(updatePinDisplay, 300);
+          showSuccess(amount, recipient);
+        } else {
+          shakeBoxes();
+          enteredPin = "";
+          setTimeout(updatePinDisplay, 300);
+        }
+      }
+    });
+  </script>
+</body>
+</html>

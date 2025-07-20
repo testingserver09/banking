@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Personal Information</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #fff;
+      padding: 20px;
+      color: #1f1f1f;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    header i {
+      font-size: 18px;
+      color: #1f1f1f;
+    }
+    header h2 {
+      font-size: 18px;
+      font-weight: 600;
+      margin: 0;
+    }
+    .info-text {
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+    input, select {
+      width: 100%;
+      padding: 12px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      margin-top: 16px;
+    }
+    .row {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .row .half {
+      flex: 1;
+    }
+    .phone-input {
+      display: flex;
+      gap: 10px;
+    }
+    .flag-dropdown {
+      position: relative;
+      width: 100%;
+    }
+    .flag-display {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 12px;
+      background: #f5f5f5;
+      border-radius: 8px;
+      cursor: pointer;
+      border: 1px solid #ccc;
+      user-select: none;
+      margin-top: 16px;
+    }
+    .flag-list {
+      display: none;
+      position: absolute;
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      top: 110%;
+      width: 100%;
+      z-index: 10;
+      max-height: 150px;
+      overflow-y: auto;
+    }
+    .flag-list div {
+      padding: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .flag-list div:hover {
+      background: #f0f0f0;
+    }
+
+    button {
+      width: 100%;
+      background: #3836B4;
+      border: none;
+      padding: 15px;
+      font-size: 16px;
+      border-radius: 30px;
+      color: white;
+      margin-top: 30px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      position: relative;
+    }
+    button:active {
+      transform: scale(0.98);
+    }
+
+    .spinner {
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid white;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      animation: spin 1s linear infinite;
+      margin-left: 10px;
+    }
+
+    .button-content {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+
+  <style>
+    .footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-width: 420px;
+  margin: auto;
+  background: white;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 10px 0;
+  box-shadow: 0 -1px 10px rgba(0, 0, 0, 0.08);
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+  z-index: 20;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 12px;
+  color: #888;
+   justify-content: center;
+  text-decoration: none; /* removes underline */
+}
+
+.nav-item i {
+  font-size: 18px;
+  margin-bottom: 4px;
+}
+
+.nav-item.active {
+  color: #3d5afe;
+}
+
+.nav-item.active i {
+  color: #3d5afe;
+}
+.nav-item:hover {
+  color: #3d5afe; /* accent on hover */
+}
+
+.fab {
+  position: absolute;
+  top: -24px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background-color: #3836b4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 16px rgba(61, 90, 254, 0.4);
+  z-index: 30;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.fab:hover {
+  transform: translateX(-50%) scale(1.08);
+  box-shadow: 0 6px 20px rgba(61, 90, 254, 0.6);
+}
+
+.fab-icon {
+  width: 28px;
+  height: 28px;
+}
+
+.fab-tooltip {
+  position: absolute;
+  top: -30px;
+  background-color: #3836b4;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.fab:hover .fab-tooltip {
+  opacity: 1;
+}
+  </style>
+</head>
+<body>
+  <header>
+    <i class="fa fa-chevron-left" onclick="history.back()"></i>
+    <h2>Personal Information</h2>
+  </header>
+
+  <p class="info-text">
+    We have sent a SMS code to this phone <br />
+    +1 ***  ***  ***7. Use this code to verify your account.
+  </p>
+
+  <input type="text" id="fullname" placeholder="First name & last name" autofocus oninput="autoFocusNext(this, 'country')" />
+
+  <select id="country" onchange="autoFocusNext(this, 'city')">
+    <option value="">Select your country...</option>
+    <option value="US">🇺🇸 United States</option>
+    <option value="GB">🇬🇧 United Kingdom</option>
+    <option value="AU">🇦🇺 Australia</option>
+    <option value="de">DE German</option>
+    <option value="IN">🇮🇳 India</option>
+    <option value="ro">Ro Romanian</option>
+  </select>
+
+  <div class="row">
+    <input class="half" id="city" type="text" placeholder="Address: Brisbane" oninput="autoFocusNext(this, 'postal')" />
+    <input class="half" id="postal" type="text" placeholder="0000" oninput="autoFocusNext(this, 'address')" />
+  </div>
+
+  <input type="text" id="address" placeholder="Example: 123abcDE.##" oninput="autoFocusNext(this, 'phone')" />
+
+  <div class="row">
+    <div class="half flag-dropdown">
+      <div class="flag-display" onclick="toggleFlagList()">
+        <span id="flag-icon">🇺🇸</span> <span id="flag-code">+1</span>
+      </div>
+      <div class="flag-list" id="flag-list">
+        <div onclick="selectFlag('🇺🇸', '+1')">🇺🇸 +1</div>
+        <div onclick="selectFlag('🇬🇧', '+44')">🇬🇧 +44</div>
+        <div onclick="selectFlag('🇦🇺', '+61')">🇦🇺 +61</div>
+        <div onclick="selectFlag('de', '+49')">de +49</div>
+        <div onclick="selectFlag('🇮🇳', '+91')">🇮🇳 +91</div>
+      </div>
+    </div>
+    <input class="half" id="phone" type="text" placeholder="123abcDE.##" />
+  </div>
+
+  <button onclick="submitInfo(this)">
+    <div class="button-content">
+      <span>Continue</span>
+    </div>
+  </button>
+
+  <div class="footer">
+  <a href="dashboard.html" class="nav-item">
+  <i class="fas fa-home"></i>
+  <span>Home</span>
+</a>
+  <a href="cards.html"  class="nav-item">
+    <i class="fas fa-credit-card"></i>
+    <span>Cards</span>
+  </a>
+
+  <a href="scan.html" class="fab">
+  <img src="images/scan_WH.png" alt="Scan Code" class="fab-icon" />
+  <div class="fab-tooltip">Scan</div>
+</a>
+  <a href="analytics.html"  class="nav-item">
+    <i class="fas fa-chart-line"></i>
+    <span>Analytics</span>
+  </a>
+  <a href="profile.html"  class="nav-item">
+    <i class="fas fa-user"></i>
+    <span>profile</span>
+  </a>
+</div>
+
+  <script>
+    function autoFocusNext(current, nextId) {
+      if (current.value.length > 2) {
+        const next = document.getElementById(nextId);
+        if (next) next.focus();
+      }
+    }
+
+    function toggleFlagList() {
+      const list = document.getElementById('flag-list');
+      list.style.display = list.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function selectFlag(flag, code) {
+      document.getElementById('flag-icon').textContent = flag;
+      document.getElementById('flag-code').textContent = code;
+      document.getElementById('flag-list').style.display = 'none';
+    }
+
+    window.onclick = function(e) {
+      if (!e.target.closest('.flag-dropdown')) {
+        document.getElementById('flag-list').style.display = 'none';
+      }
+    };
+
+    function submitInfo(button) {
+      const content = button.querySelector('.button-content');
+      content.innerHTML = `<span>Verifying</span><div class="spinner"></div>`;
+      button.disabled = true;
+
+      setTimeout(() => {
+        alert('Verified and submitted!');
+        content.innerHTML = `<span>Continue</span>`;
+        button.disabled = false;
+      }, 2000);
+    }
+  </script>
+</body>
+</html>

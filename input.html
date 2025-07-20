@@ -1,0 +1,495 @@
+<!DOCTYpE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Value Transfer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+    body {
+      margin: 0;
+      background-color: #f4f6fa;
+      padding: 20px;
+    }
+    .transfer-popup {
+      background: #fff;
+      border-radius: 20px;
+      padding: 24px;
+      max-width: 400px;
+      margin: 40px auto;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+    }
+    .header-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+    .back-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      background: #f3f0ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #3836B4;
+      cursor: pointer;
+    }
+    .header-title {
+      font-size: 16px;
+      font-weight: 600;
+      flex-grow: 1;
+      text-align: center;
+      margin-right: 32px;
+    }
+    label {
+      display: block;
+      font-size: 14px;
+      margin: 12px 0 6px;
+      color: #111827;
+    }
+    .input-wrap {
+      position: relative;
+      margin-bottom: 12px;
+    }
+    .amount-input {
+      width: 100%;
+      padding: 14px 16px;
+      font-size: 16px;
+      border: 2px solid #d6ccfb;
+      border-radius: 12px;
+      outline: none;
+    }
+    .amount-input:focus {
+      border-color: #3836B4;
+    }
+    .charges-row {
+      background-color: #f3f0ff;
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-size: 14px;
+      color: #555;
+      display: flex;
+      justify-content: space-between;
+      margin-top: 8px;
+    }
+    .numpad {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin: 20px 0;
+      justify-items: center;
+    }
+    .numpad button {
+      padding: 18px;
+      font-size: 20px;
+      font-weight: bold;
+      border: none;
+      border-radius: 50%;
+      background: #e2e8f0;
+      cursor: pointer;
+      position: relative;
+      height: 64px;
+      width: 64px;
+    }
+    .numpad button span {
+      display: block;
+      font-size: 10px;
+      color: #555;
+      margin-top: 4px;
+    }
+    .send-btn {
+      width: 160px;
+      padding: 12px;
+      margin: 20px auto 0;
+      display: block;
+      background-color: rgba(143, 133, 255, 0.2);
+      color: #3836B4;
+      border: none;
+      border-radius: 14px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+      transition: background-color 0.3s ease;
+    }
+    .send-btn:hover {
+      background-color: rgba(143, 133, 255, 0.447);
+    }
+    .payment-modal {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(4px);
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.payment-content {
+  background: #fff;
+  width: 100%;
+  max-width: 400px;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  padding: 24px;
+  animation: slideUp 0.3s ease-out;
+  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.payment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.payment-header button {
+  background: #f2f2f2;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 18px;
+  cursor: pointer;
+  color: #555;
+}
+
+.payment-option {
+  margin-bottom: 14px;
+}
+
+.payment-option input[type="radio"] {
+  display: none;
+}
+
+.option-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1.5px solid #ddd;
+  border-radius: 12px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: 0.3s;
+  background: #f9f9f9;
+}
+
+.option-box i:first-child {
+  margin-right: 10px;
+  color: #aaa;
+  font-size: 18px;
+}
+
+.option-box span {
+  flex-grow: 1;
+  font-size: 15px;
+  color: #333;
+}
+
+.option-box.selected {
+  border: 2px solid #3836B4;
+  background-color: #f5f1ff;
+  box-shadow: 0 0 0 3px rgba(142, 118, 255, 0.15);
+}
+
+.option-box.selected i:first-child {
+  color: #8e76ff;
+}
+
+.option-box.selected span {
+  color: #4b3cff;
+}
+
+.option-box.selected i:last-child {
+  color: #4b3cff;
+}
+.pay-btn {
+  width: 100%;
+  padding: 16px;
+  margin-top: 16px;
+  border: none;
+  border-radius: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+  background: linear-gradient(to bottom, #8f7fff, #5f41ff);
+  box-shadow: 0 4px 20px rgba(114, 90, 255, 0.4);
+  cursor: pointer;
+  transition: background 0.3s;
+}
+.payment-modal {
+  position: fixed;
+  top: 0; /* ADD THIS */
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(6px); /* Increase blur strength if needed */
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 9999;
+  transition: background 0.3s ease;
+}
+
+.pay-btn:hover {
+  background: linear-gradient(to bottom, #a08bff, #523aff);
+}
+
+    .payment-modal.closing .payment-content {
+      animation: slideDown 0.3s ease-in;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(100%); opacity: 0; }
+      to   { transform: translateY(0); opacity: 1; }
+    }
+    @keyframes slideDown {
+      from { transform: translateY(0); opacity: 1; }
+      to   { transform: translateY(100%); opacity: 0; }
+    }
+    .option-box.selected {
+      border-color: #6d28d9;
+      background-color: rgba(143, 133, 255, 0.08);
+      color: #2f2ce9;
+    }
+    .shake {
+      animation: shake 0.3s;
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+  </style>
+  <style>
+     .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255, 255, 255, 0.9);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+.loader {
+  width: 100px;
+  aspect-ratio: 1;
+  padding: 10px;
+  box-sizing: border-box;
+  display: grid;
+  background: #fff;
+  filter: blur(5px) contrast(10) hue-rotate(300deg);
+  mix-blend-mode: darken;
+}
+.loader:before,
+.loader:after{ 
+  content: "";
+  grid-area: 1/1; 
+  width: 40px;
+  height: 40px;
+  background: #3836B4;
+  animation: l7 2s infinite;
+}
+.loader:after{ 
+  animation-delay: -1s;
+}
+@keyframes l7{
+  0%   {transform: translate(   0,0)}
+  25%  {transform: translate(100%,0)}
+  50%  {transform: translate(100%,100%)}
+  75%  {transform: translate(   0,100%)}
+  100% {transform: translate(   0,0)}
+}
+  </style>
+</head>
+<body>
+
+<audio id="clickSound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_5006c7469c.mp3?filename=ui-click-124305.mp3" preload="auto"></audio>
+
+<div class="transfer-popup">
+  <div class="header-row">
+    <div class="back-btn"><a href="transfer.html" class="back-button"><i class="fa fa-chevron-left"></i></a></div>
+    <div class="header-title">Add Amount</div>
+  </div>
+  <label for="amountInput">Enter amount <span style="color: red">*</span></label>
+  <div class="input-wrap">
+    <input type="text" id="amountInput" class="amount-input" value="$0.00" readonly />
+  </div>
+  <label for="remarkInput">Remark</label>
+  <input type="text" class="amount-input" id="remarkInput" placeholder="What’s this for?" />
+  <div class="charges-row">
+    <div>Charges</div>
+    <div id="chargesText">$0.00</div>
+  </div>
+  <div class="numpad" id="numpad">
+    <button data-val="1">1 <span>A B C</span></button>
+    <button data-val="2">2 <span>D E F</span></button>
+    <button data-val="3">3 <span>G H I</span></button>
+    <button data-val="4">4 <span>J K L</span></button>
+    <button data-val="5">5 <span>M N O</span></button>
+    <button data-val="6">6 <span>p Q R</span></button>
+    <button data-val="7">7 <span>S T U</span></button>
+    <button data-val="8">8 <span>V W X</span></button>
+    <button data-val="9">9 <span>Y Z</span></button>
+    <div></div>
+    <button data-val="0">0</button>
+    <button id="deleteBtn"><i class="fa-solid fa-delete-left"></i></button>
+  </div>
+  <button class="send-btn" id="sendBtn">Next</button>
+</div>
+
+<div class="payment-modal" id="paymentModal">
+  <div class="payment-content">
+    <div class="payment-header">
+      <span>Select payment method</span>
+      <button id="closeModal">&times;</button>
+    </div>
+    <div class="payment-option">
+      <label>
+        <input type="radio" name="paymentMethod" value="wallet" checked />
+        <div class="option-box selected">
+          <i class="fa-solid fa-wallet"></i>
+          <span>paySync Wallet</span>
+          <i class="fa-regular fa-circle-dot"></i>
+        </div>
+      </label>
+    </div>
+    <div class="payment-option">
+      <label>
+        <input type="radio" name="paymentMethod" value="bank" />
+        <div class="option-box">
+          <i class="fa-solid fa-building-columns"></i>
+          <span>Linked Bank</span>
+          <i class="fa-regular fa-circle"></i>
+        </div>
+      </label>
+    </div>
+    <div class="payment-option">
+      <label>
+        <input type="radio" name="paymentMethod" value="rewards" />
+        <div class="option-box">
+          <i class="fa-solid fa-gift"></i>
+          <span>paySync Rewards</span>
+          <i class="fa-regular fa-circle"></i>
+        </div>
+      </label>
+    </div>
+    <button class="pay-btn">pay</button>
+  </div>
+</div>
+<div class="overlay" id="overlay">
+    <div class="loader"></div>
+    <p>Processing your transaction...</p>
+  </div>
+
+<script>
+const clickSound = document.getElementById('clickSound');
+function playClickSound() {
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    clickSound.currentTime = 0;
+    clickSound.play();
+    if (navigator.vibrate) navigator.vibrate(10);
+  }
+}
+
+const amountInput = document.getElementById('amountInput');
+const chargesText = document.getElementById('chargesText');
+const remarkInput = document.getElementById('remarkInput');
+const sendBtn = document.getElementById('sendBtn');
+const modal = document.getElementById('paymentModal');
+const closeModal = document.getElementById('closeModal');
+const radioInputs = document.querySelectorAll('input[name="paymentMethod"]');
+let currentAmount = '';
+
+function updateDisplay() {
+  const amountNum = parseFloat(currentAmount || '0');
+  amountInput.value = `$${amountNum.toLocaleString()}.00`;
+  const charges = 10 + amountNum * 0.01;
+  chargesText.textContent = `$${charges.toFixed(2)}`;
+}
+
+document.getElementById('numpad').addEventListener('click', (e) => {
+  const val = e.target.closest('button')?.dataset?.val;
+  const isDelete = e.target.closest('button')?.id === 'deleteBtn';
+  if (val) currentAmount += val;
+  else if (isDelete) currentAmount = currentAmount.slice(0, -1);
+  updateDisplay();
+  playClickSound();
+});
+
+sendBtn.addEventListener('click', () => {
+  const amount = parseFloat(currentAmount || '0');
+  const remark = remarkInput.value.trim();
+
+  if (!remark) {
+    remarkInput.classList.add('shake');
+    setTimeout(() => remarkInput.classList.remove('shake'), 300);
+    return;
+  }
+
+  const amountFormatted = encodeURIComponent(amount.toFixed(2));
+  const remarkEncoded = encodeURIComponent(remark);
+  const url = `pinentry.html?amount=${amountFormatted}&name=${remarkEncoded}`;
+  window.location.href = url;
+});
+
+
+closeModal.addEventListener('click', () => closeWithSlideDown());
+
+modal.addEventListener('click', (e) => {
+  if (e.target === modal) closeWithSlideDown();
+});
+
+function closeWithSlideDown() {
+  modal.classList.add('closing');
+  setTimeout(() => {
+    modal.style.display = 'none';
+    modal.classList.remove('closing');
+  }, 300);
+}
+
+radioInputs.forEach(input => {
+  input.addEventListener('change', () => {
+    document.querySelectorAll('.option-box').forEach(box => box.classList.remove('selected'));
+    input.parentElement.querySelector('.option-box').classList.add('selected');
+  });
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && modal.style.display === 'flex') {
+    closeWithSlideDown();
+  }
+});
+
+</script>
+<script>
+    function showLoader() {
+      const overlay = document.getElementById('overlay');
+      overlay.style.display = 'flex';
+
+      setTimeout(() => {
+        overlay.style.display = 'none';
+      }, 3000); // Hide after 3s
+    }
+
+    // Show loader automatically on page load
+    window.addEventListener('load', showLoader);
+  </script>
+
+</body>
+</html>

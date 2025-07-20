@@ -1,0 +1,331 @@
+<!DOCTYpE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Beneficiaries</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet"/>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background-color: #fff;
+      padding: 20px;
+      color: #333;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .back-btn {
+      position: absolute;
+      left: 0;
+      background-color: #f2f2f2;
+      border: none;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      transition: background-color 0.3s ease;
+      font-size: 16px;
+      color: #333;
+    }
+
+    .back-btn:hover {
+      background-color: #e5e5e5;
+    }
+
+    .back-btn a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .header h2 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .search-box {
+      margin: 20px 0;
+      display: flex;
+      align-items: center;
+      background: #f3f3f3;
+      padding: 12px 16px;
+      border-radius: 14px;
+    }
+
+    .search-box input {
+      border: none;
+      background: transparent;
+      width: 100%;
+      font-size: 16px;
+      outline: none;
+    }
+
+    .beneficiary-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .beneficiary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px dotted #ddd;
+    }
+
+    .beneficiary-left {
+      display: flex;
+      align-items: center;
+    }
+
+    .beneficiary img.avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      margin-right: 12px;
+    }
+
+    .beneficiary-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .beneficiary-name {
+      font-weight: 600;
+      font-size: 16px;
+    }
+
+    .beneficiary-details {
+      font-size: 14px;
+      color: #666;
+    }
+    .beneficiary.selected {
+  background-color: #f0edff;
+  border-radius: 12px;
+  padding: 14px;
+}
+
+
+    .bank-logo {
+      width: 36px;
+      height: 36px;
+    }
+
+    .continue-btn {
+      margin-top: 30px;
+      width: 100%;
+      padding: 14px;
+      font-size: 16px;
+      font-weight: 600;
+      background-color: #e0dcff;
+      border: none;
+      border-radius: 16px;
+      color: #4b3ed9;
+      cursor: pointer;
+      display: block;
+      text-align: center;
+      text-decoration: none;
+    }
+  </style>
+  <style>
+     .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255, 255, 255, 0.9);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+.loader {
+  width: 100px;
+  aspect-ratio: 1;
+  padding: 10px;
+  box-sizing: border-box;
+  display: grid;
+  background: #fff;
+  filter: blur(5px) contrast(10) hue-rotate(300deg);
+  mix-blend-mode: darken;
+}
+.loader:before,
+.loader:after{ 
+  content: "";
+  grid-area: 1/1; 
+  width: 40px;
+  height: 40px;
+  background: #3836B4;
+  animation: l7 2s infinite;
+}
+.loader:after{ 
+  animation-delay: -1s;
+}
+@keyframes l7{
+  0%   {transform: translate(   0,0)}
+  25%  {transform: translate(100%,0)}
+  50%  {transform: translate(100%,100%)}
+  75%  {transform: translate(   0,100%)}
+  100% {transform: translate(   0,0)}
+}
+  </style>
+</head>
+<body>
+  <div class="header">
+    <button class="back-btn">
+      <a href="dashboard.html"><i class="fa fa-chevron-left"></i></a>
+    </button>
+    <h2>Beneficiaries</h2>
+  </div>
+
+  <div class="search-box">
+    <input type="text" placeholder="Search" id="searchInput">
+  </div>
+
+  <ul class="beneficiary-list" id="beneficiaryList">
+    <!-- Beneficiaries will be injected here -->
+  </ul>
+
+  <a href="input.html" class="continue-btn">Continue</a>
+  
+<div class="overlay" id="overlay">
+    <div class="loader"></div>
+  </div>
+
+
+  <script>
+  const beneficiaries = [
+    {
+      name: 'spotify',
+      bank: 'spotify Music',
+      avatar: 'images/sportify.png',
+      bankLogo: 'images/bank.png'
+    },
+    {
+      name: 'vodafone',
+      bank: 'Vodafone.com',
+      avatar: 'images/vodaphone.png',
+      bankLogo: 'images/bank.png'
+    },
+    {
+      name: 'Apple',
+      bank: 'AApL (NASDAQ)',
+      avatar: 'images/apple.png',
+      bankLogo: 'images/bank.png'
+    },
+    {
+      name: 'Domino pizza',
+      bank: 'Domino pizza INC',
+      avatar: 'images/dominion.png',
+      bankLogo: 'images/bank.png'
+    },
+    {
+      name: 'Google',
+      bank: 'Google LLC',
+      avatar: 'images/google.png',
+      bankLogo: 'images/bank.png'
+    },
+    {
+      name: 'microsoft',
+      bank: 'Microsoft 365',
+      avatar: 'images/windows.png',
+      bankLogo: 'images/bank.png'
+    },
+    {
+      name: 'Starbucks',
+      bank: 'Energy Drink',
+      avatar: 'images/star_buks.png',
+      bankLogo: 'images/bank.png'
+    },
+    {
+      name: 'WWF',
+      bank: 'the World Wide Fund for Nature',
+      avatar: 'images/World_Wde_Funds.png',
+      bankLogo: 'images/bank.png'
+    }
+  ];
+
+  const list = document.getElementById('beneficiaryList');
+  let selectedItem = null;
+
+  function renderList(filter = '') {
+    list.innerHTML = '';
+    beneficiaries
+      .filter(b => b.name.toLowerCase().includes(filter.toLowerCase()))
+      .forEach((b, index) => {
+        const li = document.createElement('li');
+        li.className = 'beneficiary';
+        li.innerHTML = `
+          <div class="beneficiary-left">
+            <img class="avatar" src="${b.avatar}" alt="${b.name}" />
+            <div class="beneficiary-info">
+              <div class="beneficiary-name">${b.name}</div>
+              <div class="beneficiary-details">${b.bank} • ${b.number}</div>
+            </div>
+          </div>
+          <img class="bank-logo" src="${b.bankLogo}" alt="${b.bank}" />
+        `;
+
+        li.addEventListener('click', () => {
+          // Remove selection from any previously selected item
+          if (selectedItem) selectedItem.classList.remove('selected');
+
+          // Highlight current one
+          li.classList.add('selected');
+          selectedItem = li;
+
+          // Save to localStorage
+          localStorage.setItem('selectedRecipient', JSON.stringify(b));
+        });
+
+        list.appendChild(li);
+      });
+  }
+
+  document.getElementById('searchInput').addEventListener('input', (e) => {
+    renderList(e.target.value);
+  });
+
+  renderList();
+
+  const recipient = JSON.parse(localStorage.getItem('selectedRecipient'));
+if (recipient) {
+  console.log("Selected:", recipient.name, recipient.bank, recipient.number);
+}
+
+</script>
+ <script>
+    function showLoader() {
+      const overlay = document.getElementById('overlay');
+      overlay.style.display = 'flex';
+
+      setTimeout(() => {
+        overlay.style.display = 'none';
+      }, 3000); // Hide after 3s
+    }
+
+    // Show loader automatically on page load
+    window.addEventListener('load', showLoader);
+  </script>
+</body>
+</html>

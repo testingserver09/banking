@@ -1,0 +1,208 @@
+<!DOCTYpE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analytics Live</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    * { box-sizing: border-box; font-family: 'Inter', sans-serif; }
+    html, body { height: 100%; margin: 0; }
+    body { display: flex; flex-direction: column; min-height: 100vh; background: #f8f9fc; color: #333; }
+    .main-content { flex: 1; padding: 20px; padding-bottom: 100px; }
+
+    .header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+    .back-btn { background: #eee; border: none; border-radius: 50%; width: 40px; height: 40px; font-size: 18px; cursor: pointer; }
+    h2 { margin: 0; font-size: 20px; font-weight: 600; }
+    .balance { font-size: 18px; margin-bottom: 10px; }
+    .amount { font-size: 28px; font-weight: bold; }
+
+    .stats-header { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; }
+    .dropdown { padding: 6px 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 14px; }
+    #barChart { width: 100% !important; max-height: 240px; margin-top: 10px; }
+
+    .cards { display: flex; gap: 16px; margin-top: 30px; flex-wrap: wrap; justify-content: center; }
+    .card { flex: 1; min-width: 160px; max-width: 200px; padding: 16px; border-radius: 20px; background: white; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.3s ease; }
+    .card:hover { transform: translateY(-4px); }
+    .label { font-size: 14px; color: #666; margin-bottom: 10px; }
+    .value { font-size: 26px; font-weight: 600; color: #0a1b3c; display: flex; align-items: center; justify-content: center; gap: 6px; }
+    .arrow-up { color: green; font-size: 16px; }
+    .arrow-down { color: red; font-size: 16px; }
+    .date { font-size: 13px; color: #777; margin-top: 5px; }
+
+    .market-section { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 16px rgba(0,0,0,0.05); margin-top: 30px; }
+    .stock-list { display: flex; flex-direction: column; gap: 16px; }
+    .stock-item { display: flex; align-items: center; justify-content: space-between; padding: 12px; border-radius: 10px; background: #f9fafb; transition: background 0.2s ease; }
+    .stock-item:hover { background: #eef2f7; }
+    .stock-info { display: flex; align-items: center; gap: 12px; }
+    .stock-logo { width: 36px; height: 36px; border-radius: 50%; background: #ddd; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; color: white; }
+    .stock-text { display: flex; flex-direction: column; }
+    .stock-name { font-size: 14px; font-weight: 600; }
+    .stock-ticker { font-size: 12px; color: #777; }
+    .stock-price { font-size: 16px; font-weight: bold; padding: 6px 12px; border-radius: 8px; min-width: 70px; text-align: right; }
+    .green { background: #e6f6ed; color: #11a455; }
+    .red { background: #fde8e8; color: #d93025; }
+
+    .footer { position: fixed; bottom: 0; left: 0; right: 0; max-width: 420px; margin: auto; background: white; display: flex; justify-content: space-around; align-items: center; padding: 10px 0; box-shadow: 0 -1px 10px rgba(0,0,0,0.08); border-top-left-radius: 24px; border-top-right-radius: 24px; z-index: 20; }
+    .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 12px; color: #888; text-decoration: none; }
+    .nav-item i { font-size: 18px; margin-bottom: 4px; }
+    .nav-item.active { color: #3d5afe; }
+    .nav-item.active i { color: #3d5afe; }
+    .fab { position: absolute; top: -24px; left: 50%; transform: translateX(-50%); width: 64px; height: 64px; border-radius: 50%; background: #3836b4; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 16px rgba(61, 90, 254, 0.4); cursor: pointer; text-decoration: none; }
+    .fab-icon { width: 28px; height: 28px; }
+    .fab-tooltip { position: absolute; top: -30px; background: #3836b4; color: white; padding: 4px 10px; border-radius: 12px; font-size: 12px; opacity: 0; transition: opacity 0.3s ease; }
+    .fab:hover .fab-tooltip { opacity: 1; }
+  </style>
+</head>
+<body>
+<div class="main-content">
+  <div class="header">
+    <button class="back-btn" onclick="window.history.back()"><i class="fa fa-chevron-left"></i></button>
+    <h2>Analytics</h2>
+  </div>
+
+  <div class="balance">Available Balance</div>
+  <div class="amount">$67,340.00</div>
+
+  <div class="stats-header">
+    <strong>Statistic Overview</strong>
+    <select class="dropdown" id="monthSelect">
+      <option value="Dec 2024">Dec 2024</option>
+      <option value="Nov 2024">Nov 2024</option>
+      <option value="Oct 2024">Oct 2024</option>
+    </select>
+  </div>
+
+  <canvas id="barChart"></canvas>
+
+  <div class="cards">
+    <div class="card">
+      <div class="label">Confed. yield</div>
+      <div class="value"><span id="confedValue">0.000%</span><span id="confedArrow" class="arrow-up">▲</span></div>
+      <div class="date">18.07.2025</div>
+    </div>
+    <div class="card">
+      <div class="label">EUR / CHF</div>
+      <div class="value"><span id="eurValue">0.0000</span><span id="eurArrow" class="arrow-down">▼</span></div>
+      <div class="date">18.07.2025</div>
+    </div>
+  </div>
+
+  <div class="market-section">
+    <h3>Stocks & ETFs</h3>
+    <div class="stock-list" id="stockList"></div>
+  </div>
+</div>
+
+<div class="footer">
+  <a href="dashboard.html" class="nav-item"><i class="fas fa-home"></i><span>Home</span></a>
+  <a href="cards.html" class="nav-item"><i class="fas fa-credit-card"></i><span>Cards</span></a>
+  <a href="scan.html" class="fab"><img src="images/scan_WH.png" class="fab-icon" alt="Scan"><div class="fab-tooltip">Scan</div></a>
+  <a href="analytics.html" class="nav-item"><i class="fas fa-chart-line"></i><span>Analytics</span></a>
+  <a href="profile.html" class="nav-item"><i class="fas fa-user"></i><span>profile</span></a>
+</div>
+
+<script>
+/* ✅ Stocks with live updates */
+const stocks = [
+  { ticker: "TSLA", name: "Tesla Inc.", color: "#cc0000", price: 170.87 },
+  { ticker: "AApL", name: "Apple Inc.", color: "#000", price: 163.64 },
+  { ticker: "NFLX", name: "Netflix Inc.", color: "#d81f26", price: 672.88 },
+    { ticker: "TWTR", name: "Twitter Inc.", color: "#1DA1F2", price: 61.14 },
+    { ticker: "KO",   name: "Coca-Cola Co.", color: "#F40009", price: 61.14 },
+    { ticker: "MSFT", name: "Microsoft Corp.", color: "#2D7FEA", price: 61.14 },
+    { ticker: "META", name: "Meta platforms Inc.", color: "#4E8EF7", price: 492.41 },
+    { ticker: "NFLX", name: "Netflix Inc.", color: "#d81f26", price: 672.88 },
+];
+const stockList = document.getElementById("stockList");
+
+function createStockRow(stock) {
+  const row = document.createElement("div");
+  row.className = "stock-item";
+  row.innerHTML = `
+    <div class="stock-info">
+      <div class="stock-logo" style="background:${stock.color};">${stock.ticker[0]}</div>
+      <div class="stock-text"><div class="stock-name">${stock.name}</div><div class="stock-ticker">${stock.ticker}</div></div>
+    </div>
+    <div class="stock-price green" id="price-${stock.ticker}">$${stock.price.toFixed(2)}</div>`;
+  stockList.appendChild(row);
+}
+stocks.forEach(createStockRow);
+
+/* ✅ Animate numbers */
+function animateCount(el, start, end, suffix = "", decimals = 2) {
+  let current = start, steps = 30, step = (end - start) / steps, count = 0;
+  const interval = setInterval(() => {
+    current += step; count++;
+    if (count >= steps) { current = end; clearInterval(interval); }
+    el.textContent = current.toFixed(decimals) + suffix;
+  }, 30);
+}
+
+/* ✅ Live stock update & chart update */
+function updateStocks() {
+  let total = 0;
+  stocks.forEach(stock => {
+    const change = (Math.random() - 0.5) * 10;
+    const newprice = parseFloat((stock.price + change).toFixed(2));
+    const el = document.getElementById(`price-${stock.ticker}`);
+    animateCount(el, stock.price, newprice, "$");
+    el.className = newprice > stock.price ? "stock-price green" : "stock-price red";
+    stock.price = newprice;
+    total += newprice;
+  });
+  updateChart(total / stocks.length);
+}
+
+/* ✅ Confed & EUR Live update */
+let confedVal = 0.463, eurVal = 0.9334;
+function updateCards() {
+  const newConfed = parseFloat((confedVal + (Math.random() - 0.5) * 0.02).toFixed(4));
+  const newEur = parseFloat((eurVal + (Math.random() - 0.5) * 0.02).toFixed(4));
+  animateCount(document.getElementById("confedValue"), confedVal, newConfed, "%", 3);
+  animateCount(document.getElementById("eurValue"), eurVal, newEur, "", 4);
+  document.getElementById("confedArrow").textContent = newConfed > confedVal ? "▲" : "▼";
+  document.getElementById("eurArrow").textContent = newEur > eurVal ? "▲" : "▼";
+  document.getElementById("confedArrow").className = newConfed > confedVal ? "arrow-up" : "arrow-down";
+  document.getElementById("eurArrow").className = newEur > eurVal ? "arrow-up" : "arrow-down";
+  confedVal = newConfed; eurVal = newEur;
+}
+
+/* ✅ Chart Initialization */
+const ctx = document.getElementById('barChart').getContext('2d');
+const barChart = new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+    datasets: [{
+      label: '$',
+      data: [12, 2, 24, 16, 9, 14],
+      backgroundColor: '#3836B4',
+      borderRadius: 8,
+    }]
+  },
+  options: { responsive: true, animation: { duration: 500 }, scales: { y: { beginAtZero: true } } }
+});
+
+/* ✅ Update chart dynamically based on stocks */
+function updateChart(avgprice) {
+  barChart.data.datasets[0].data.shift();
+  barChart.data.datasets[0].data.push(Math.floor(avgprice / 10));
+  barChart.update();
+}
+
+/* ✅ Interval updates */
+setInterval(updateStocks, 2500);
+setInterval(updateCards, 3000);
+
+/* ✅ Auto active footer link */
+const navItems = document.querySelectorAll('.nav-item');
+const currentpage = window.location.pathname.split('/').pop().toLowerCase();
+navItems.forEach(item => {
+  if (item.getAttribute('href').toLowerCase() === currentpage) item.classList.add('active');
+});
+</script>
+</body>
+</html>

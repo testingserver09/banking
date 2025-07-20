@@ -1,0 +1,243 @@
+<!DOCTYpE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Verify OTp</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet"/>
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: #f4f6fc;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px 20px;
+    }
+
+    .logo {
+      margin-top: 40px;
+      margin-bottom: 30px;
+      width: 120px;
+    }
+
+    h2 {
+      margin: 0 0 10px;
+      color: #1e2a78;
+    }
+
+    p {
+      margin: 0 0 25px;
+      color: #444;
+    }
+
+    .otp-box {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .otp-input {
+      width: 60px;
+      height: 60px;
+      font-size: 24px;
+      text-align: center;
+      border-radius: 12px;
+      border: 2px solid #ddd;
+      outline: none;
+      transition: 0.2s;
+    }
+
+    .otp-input:focus {
+      border-color: #4A6CF7;
+    }
+
+    .shake {
+      animation: shake 0.3s;
+    }
+
+    @keyframes shake {
+      0% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      50% { transform: translateX(5px); }
+      75% { transform: translateX(-5px); }
+      100% { transform: translateX(0); }
+    }
+
+    .verify-btn {
+      background-color: #3836B4;
+      color: white;
+      border: none;
+      padding: 15px 0;
+      width: 100%;
+      max-width: 300px;
+      font-size: 16px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .verify-btn:hover {
+      background-color: #3a59d5;
+    }
+
+    .resend {
+      margin-top: 20px;
+      font-size: 14px;
+      color: #666;
+    }
+
+    .resend button {
+      border: none;
+      background: none;
+      color: #4A6CF7;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .resend button:disabled {
+      color: #999;
+      cursor: not-allowed;
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(255,255,255,0.8);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      flex-direction: column;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #ccc;
+      border-top-color: #3836B4;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 400px) {
+      .otp-input {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <img src="images/World_Wde_Funds.png" alt="Logo" class="logo">
+
+  <h2>Enter 4-digit OTp</h2>
+  <p>Sent to your phone number</p>
+
+  <div class="otp-box" id="otpBox">
+    <input class="otp-input" maxlength="1" />
+    <input class="otp-input" maxlength="1" />
+    <input class="otp-input" maxlength="1" />
+    <input class="otp-input" maxlength="1" />
+  </div>
+
+  <button class="verify-btn" onclick="verifyOtp()">Verify</button>
+
+  <div class="resend">
+    Resend in <span id="timer">30</span>s
+    <button id="resendBtn" onclick="resendOtp()" disabled>Resend</button>
+  </div>
+
+  <div class="overlay" id="overlay">
+    <div class="spinner"></div>
+    <p style="margin-top: 12px; color: #333;">Verifying...</p>
+  </div>
+
+  <audio id="successSound" src="https://assets.mixkit.co/sfx/preview/mixkit-unlock-game-notification-253.mp3"></audio>
+
+  <script>
+    const inputs = document.querySelectorAll('.otp-input');
+    const overlay = document.getElementById('overlay');
+    const successSound = document.getElementById('successSound');
+    const correctOTp = "1234";
+
+    inputs.forEach((input, index) => {
+      input.addEventListener('input', () => {
+        if (input.value && index < inputs.length - 1) {
+          inputs[index + 1].focus();
+        }
+      });
+
+      input.addEventListener('keydown', (e) => {
+        if (e.key === "Backspace" && !input.value && index > 0) {
+          inputs[index - 1].focus();
+        }
+      });
+    });
+
+    function verifyOtp() {
+      const entered = Array.from(inputs).map(i => i.value).join('');
+      if (entered === correctOTp) {
+        overlay.style.display = "flex";
+        successSound.play();
+        navigator.vibrate?.(100); // haptic feedback
+
+        setTimeout(() => {
+          window.location.href = "dashboard.html"; // ✅ redirect on success
+        }, 2000);
+      } else {
+        document.getElementById('otpBox').classList.add('shake');
+        navigator.vibrate?.([100, 50, 100]);
+        setTimeout(() => {
+          document.getElementById('otpBox').classList.remove('shake');
+        }, 500);
+      }
+    }
+
+    // Countdown for resend
+    let countdown = 30;
+    const timerEl = document.getElementById('timer');
+    const resendBtn = document.getElementById('resendBtn');
+
+    const interval = setInterval(() => {
+      countdown--;
+      timerEl.textContent = countdown;
+      if (countdown === 0) {
+        resendBtn.disabled = false;
+        clearInterval(interval);
+      }
+    }, 1000);
+
+    function resendOtp() {
+      countdown = 30;
+      resendBtn.disabled = true;
+      timerEl.textContent = countdown;
+      inputs.forEach(input => input.value = "");
+      inputs[0].focus();
+      setInterval(() => {
+        countdown--;
+        timerEl.textContent = countdown;
+        if (countdown === 0) {
+          resendBtn.disabled = false;
+          clearInterval(interval);
+        }
+      }, 1000);
+    }
+  </script>
+</body>
+</html>

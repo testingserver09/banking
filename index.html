@@ -1,0 +1,264 @@
+<!DOCTYpE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Your personal finance dashboard to manage accounts, cards, loans and more.">
+<link rel="icon" href="images/BoonCash_logo.png">
+  <title>BoonCash</title>
+  <link rel="stylesheet" href="styles.css"/>
+  <style>
+    body, html {
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .onboarding-wrapper {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      overflow: hidden;
+    }
+
+    .slides-container {
+      display: flex;
+      width: 500%;
+      height: 100%;
+      transition: transform 0.6s ease-in-out;
+    }
+
+    .slide {
+      width: 100vw;
+      flex-shrink: 0;
+      position: relative;
+      background-size: cover;
+      background-position: center;
+      color: white;
+    }
+
+    .overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 0;
+    }
+
+    .slide-content {
+      position: absolute;
+      z-index: 1;
+      bottom: 80px;
+      width: 100%;
+      text-align: center;
+      padding: 0 20px;
+    }
+
+    .slide-title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .slide-subtitle {
+      font-size: 1rem;
+      margin-bottom: 24px;
+    }
+
+    .dots {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      margin-bottom: 20px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.5);
+    }
+
+    .dot.active {
+      background: #fff;
+      width: 10px;
+      height: 10px;
+    }
+
+    .btn-primary, .btn-secondary {
+      padding: 12px;
+      border-radius: 25px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin: 6px auto;
+      display: block;
+      width: 80%;
+    }
+
+    .btn-primary {
+      background-color: var(--primary-color, #3836B4 );
+      color: white;
+      border: none;
+    }
+
+    .btn-secondary {
+      background-color: transparent;
+      color: white;
+      border: 1.5px solid white;
+    }
+  </style>
+</head>
+<body>
+
+<div class="onboarding-wrapper">
+  <div class="slides-container" id="slides">
+
+    <!-- Slide 1 -->
+    <div class="slide" style="background-image: url('images/pasnain.png');">
+  <div class="overlay"></div>
+  <div class="slide-content">
+    <h1 class="slide-title">Your journey to financial clarity</h1>
+    <p class="slide-subtitle">Take control of your money.<br>Grow your confidence with every move.</p>
+    <div class="dots" id="dots"></div>
+    <button class="btn-primary" onclick="nextSlide()">Next</button>
+    <button class="btn-secondary" onclick="skipOnboarding()">Skip</button>
+  </div>
+</div>
+
+
+    <!-- Slide 2 -->
+    <div class="slide" style="background-image: url('images/pashouse.png');">
+      <div class="overlay"></div>
+      <div class="slide-content">
+        <h1 class="slide-title">Track your spending</h1>
+        <p class="slide-subtitle">Automatically categorize expenses to stay on top of your finances.</p>
+        <div class="dots" id="dots"></div>
+        <button class="btn-primary" onclick="nextSlide()">Next</button>
+        <button class="btn-secondary" onclick="skipOnboarding()">Skip</button>
+      </div>
+    </div>
+
+    <!-- Slide 3 -->
+    <div class="slide" style="background-image: url('images/pasgf1.png');">
+      <div class="overlay"></div>
+      <div class="slide-content">
+        <h1 class="slide-title">Set goals</h1>
+        <p class="slide-subtitle">Whether saving for a trip or a home, we’ll help you get there.</p>
+        <div class="dots" id="dots"></div>
+        <button class="btn-primary" onclick="nextSlide()">Next</button>
+        <button class="btn-secondary" onclick="skipOnboarding()">Skip</button>
+      </div>
+    </div>
+
+    <!-- Slide 4 -->
+    <div class="slide" style="background-image: url('images/pas1.webp');">
+      <div class="overlay"></div>
+      <div class="slide-content">
+        <h1 class="slide-title">Grow smarter</h1>
+        <p class="slide-subtitle">Learn with personalized insights as you go.</p>
+        <div class="dots" id="dots"></div>
+        <button class="btn-primary" onclick="nextSlide()">Next</button>
+        <button class="btn-secondary" onclick="skipOnboarding()">Skip</button>
+      </div>
+    </div>
+
+    <!-- Slide 5 -->
+    <div class="slide" style="background-image: url('images/passec.png');">
+      <div class="overlay"></div>
+      <div class="slide-content">
+        <h1 class="slide-title">Let’s get started!</h1>
+        <p class="slide-subtitle">You're ready to manage your money confidently.</p>
+        <div class="dots" id="dots"></div>
+        <button class="btn-primary" onclick="completeOnboarding()">Get Started</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const totalSlides = 5;
+  let currentSlide = 0;
+
+  // Check localStorage
+  
+
+  function updateSlide() {
+    const slides = document.getElementById('slides');
+    slides.style.transform = `translateX(-${currentSlide * 100}vw)`;
+    renderDots();
+  }
+
+  function nextSlide() {
+    if (currentSlide < totalSlides - 1) {
+      currentSlide++;
+      updateSlide();
+    }
+  }
+
+  function skipOnboarding() {
+    localStorage.setItem('onboardingComplete', 'true');
+    window.location.href = "login.html";
+  }
+
+  function completeOnboarding() {
+    localStorage.setItem('onboardingComplete', 'true');
+    window.location.href = "login.html";
+  }
+
+  function renderDots() {
+    const dotsContainerList = document.querySelectorAll('#dots');
+    dotsContainerList.forEach(dotsContainer => {
+      dotsContainer.innerHTML = '';
+      for (let i = 0; i < totalSlides; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'dot' + (i === currentSlide ? ' active' : '');
+        dotsContainer.appendChild(dot);
+      }
+    });
+  }
+
+  // Initialize
+  updateSlide();
+</script>
+<script>
+    let startX = 0;
+let isDragging = false;
+
+// Swipe handlers
+document.querySelector('.slides-container').addEventListener('touchstart', (e) => {
+  startX = e.touches[0].clientX;
+  isDragging = true;
+});
+
+document.querySelector('.slides-container').addEventListener('touchmove', (e) => {
+  if (!isDragging) return;
+  const currentX = e.touches[0].clientX;
+  const diff = startX - currentX;
+
+  if (Math.abs(diff) > 50) {
+    if (diff > 0) {
+      // Swipe Left
+      nextSlide();
+    } else {
+      // Swipe Right
+      if (currentSlide > 0) {
+        currentSlide--;
+        updateSlide();
+      }
+    }
+    isDragging = false;
+  }
+});
+
+document.querySelector('.slides-container').addEventListener('touchend', () => {
+  isDragging = false;
+});
+
+</script>
+
+</body>
+</html>
